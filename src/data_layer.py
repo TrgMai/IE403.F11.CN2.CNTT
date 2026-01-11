@@ -5,6 +5,7 @@ Theo Single Responsibility Principle: chỉ chịu trách nhiệm load và cache
 Hỗ trợ cả Local (từ data/) và Online (từ Kaggle)
 """
 import os
+import shutil
 import pandas as pd
 import streamlit as st
 from typing import Optional
@@ -15,32 +16,51 @@ from src.config import DATA_FILES
 class KaggleDownloader:
     """Lớp download dữ liệu từ Kaggle."""
     
-    DATASET_ID = "vjchoudhary7/customer-segmentation-tutorial-in-python"
+    DATASET_ID = "frtgnn/dunnhumby-the-complete-journey"
     
     @staticmethod
     def ensure_data_exists():
         """Download dữ liệu từ Kaggle nếu local không có."""
         try:
-            # Kiểm tra nếu data/ folder đã có file
             data_path = Path("data")
-            if data_path.exists() and len(list(data_path.glob("*.csv"))) > 0:
-                return True  # Local data exists
             
-            # Nếu không có local data, download từ Kaggle
-            st.info("📥 Đang download dữ liệu từ Kaggle... Điều này có thể mất vài phút")
+            # 1. Kiểm tra nhanh: Nếu file đã có thì return True ngay
+            if data_path.exists() and len(list(data_path.glob("*.csv"))) > 0:
+                return True 
+            
+            # 2. Nếu chưa có, bắt đầu quy trình tải
+            st.info("📥 Đang download dữ liệu từ Kaggle... (Vui lòng đợi)")
+            
+            # Tạo folder data nếu chưa có
+            data_path.mkdir(parents=True, exist_ok=True)
             
             import kagglehub
             
-            # Download dataset
-            path = kagglehub.dataset_download(KaggleDownloader.DATASET_ID)
-            st.success("✅ Download thành công!")
-            return True
+            # Download về cache hệ thống
+            cache_path = kagglehub.dataset_download(KaggleDownloader.DATASET_ID)
+            
+            # Copy từ cache sang folder data/ (Sử dụng shutil)
+            source_dir = Path(cache_path)
+            copied_count = 0
+            for file_path in source_dir.glob("*.csv"):
+                shutil.copy(file_path, data_path / file_path.name)
+                copied_count += 1
+            
+            if copied_count > 0:
+                st.success("✅ Download và cấu hình thành công! Đang làm mới ứng dụng...")
+                
+                st.cache_data.clear()
+                st.rerun()
+                return True
+            else:
+                st.warning("⚠️ Đã tải nhưng không tìm thấy file .csv.")
+                return False
             
         except ImportError:
-            st.error("❌ kagglehub chưa cài đặt. Chạy: pip install kagglehub")
+            st.error("❌ Thiếu thư viện. Chạy: pip install kagglehub")
             return False
         except Exception as e:
-            st.error(f"❌ Lỗi download từ Kaggle: {str(e)}\n\nHãy chắc chắn:\n1. Cài kagglehub: `pip install kagglehub`\n2. Setup Kaggle API credentials")
+            st.error(f"❌ Lỗi download: {str(e)}")
             return False
 
 
@@ -178,4 +198,3 @@ class DataLayerSingleton:
 def get_data_layer() -> DataLayerSingleton:
     """Lấy singleton instance của DataLayer."""
     return DataLayerSingleton()
-
