@@ -8,51 +8,29 @@ Chạy: streamlit run app.py
 import streamlit as st
 from src.ui.lab_view import show_lab_page
 from src.ui.business_view import show_business_page
-from src.data_layer import get_data_layer
+from src.config_manager import show_config_editor, ConfigManager
 from src.config import (
-    DATASET_MODE, DATASET_SAMPLE_SIZE,
     APP_TITLE, APP_ICON, APP_LAYOUT, SIDEBAR_STATE,
     PRIMARY_COLOR
 )
-from src.config_manager import show_config_editor
 
-
-def show_settings():
-    """Hiển thị panel config editor (Dataset cài đặt đã có trong Config Editor)."""
-    from src.config_manager import ConfigManager
-    
-    st.sidebar.markdown("---")
-    
-    # ✅ QUAN TRỌNG: Load config từ overrides (nếu có) hoặc từ config.py
+def init_session_state():
+    """Khởi tạo các biến Session State từ ConfigManager."""
+    # Lấy config hiện tại (đã bao gồm overrides nếu có)
     current_config = ConfigManager.get_current_config()
     
-    # Khởi tạo/cập nhật session_state từ config (bao gồm overrides)
+    # Chỉ khởi tạo nếu chưa có trong session_state
     if 'dataset_mode' not in st.session_state:
         st.session_state.dataset_mode = current_config["DATASET"]["mode"]
+        
     if 'sample_size' not in st.session_state:
         st.session_state.sample_size = current_config["DATASET"]["sample_size"]
+        
     if 'config_popup' not in st.session_state:
         st.session_state.config_popup = False
-    
-    show_config_editor()
-    st.sidebar.markdown("---")
 
-
-def main():
-    """
-    Hàm chính - Điểm nhập (Entry Point) của ứng dụng.
-    Quản lý navigation giữa Lab và Business App.
-    """
-    
-    # Cấu hình trang từ config.py
-    st.set_page_config(
-        page_title=APP_TITLE,
-        page_icon=APP_ICON,
-        layout=APP_LAYOUT,
-        initial_sidebar_state=SIDEBAR_STATE
-    )
-    
-    # CSS tùy chỉnh - Light Theme (từ config.py)
+def apply_custom_css():
+    """Áp dụng CSS tùy chỉnh cho giao diện."""
     st.markdown(f"""
     <style>
     /* Main styling */
@@ -61,8 +39,10 @@ def main():
         color: #262730;
     }}
     
-    .sidebar .sidebar-content {{
+    /* Sidebar styling */
+    section[data-testid="stSidebar"] {{
         background-color: #f0f2f6;
+        border-right: 1px solid #dcdcdc;
     }}
     
     /* Typography */
@@ -83,47 +63,70 @@ def main():
         font-weight: 500;
     }}
     
-    /* Button styling */
+    /* Button styling - hover effect */
     button {{
         border-radius: 6px;
-        font-weight: 500;
         transition: all 0.3s ease;
     }}
     
-    /* Input fields */
-    input, textarea {{
-        border-radius: 6px;
-        border: 1px solid #d0d7de;
-    }}
-    
-    /* Metrics */
+    /* Metric Cards */
     [data-testid="metric-container"] {{
         background-color: #f6f8fb;
+        border: 1px solid #e0e0e0;
         border-radius: 8px;
         padding: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }}
     </style>
     """, unsafe_allow_html=True)
+
+def main():
+    """
+    Hàm chính - Điểm nhập (Entry Point) của ứng dụng.
+    Quản lý navigation giữa Lab và Business App.
+    """
     
-    # Sidebar - Cài đặt Dataset
-    show_settings()
-    
-    st.sidebar.title("Retail Smart System")
-    
-    mode = st.sidebar.radio(
-        "Chế độ:",
-        ["Phòng Thí Nghiệm", "Ứng Dụng Thực Tế"],
-        index=0
+    # 1. Cấu hình trang (Phải gọi đầu tiên)
+    st.set_page_config(
+        page_title=APP_TITLE,
+        page_icon=APP_ICON,
+        layout=APP_LAYOUT,
+        initial_sidebar_state=SIDEBAR_STATE
     )
     
-    st.sidebar.markdown("---")
+    # 2. Khởi tạo State và CSS
+    init_session_state()
+    apply_custom_css()
     
-    # Chuyển đổi giữa hai chế độ
+    # 3. Xây dựng Sidebar (Navigation & Settings)
+    with st.sidebar:
+        # Tiêu đề ứng dụng
+        st.title("🛍️ Retail Smart System")
+
+        st.divider()
+        
+        # Navigation (Menu chọn chế độ)
+        mode = st.radio(
+            "Chọn chế độ làm việc:",
+            ["Phòng Thí Nghiệm", "Ứng Dụng Thực Tế"],
+            index=0,
+            key="app_mode_selection"
+        )
+        
+        st.divider()
+        
+        # Control Panel (Nút Cấu hình từ ConfigManager)
+        show_config_editor()
+        
+        # Footer thông tin (Optional)
+        st.markdown("---")
+        st.caption("© 2024 Retail Analytics")
+
+    # 4. Điều hướng nội dung chính
     if mode == "Phòng Thí Nghiệm":
         show_lab_page()
     else:
         show_business_page()
-
 
 if __name__ == "__main__":
     main()
