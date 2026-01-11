@@ -133,7 +133,7 @@ def show_customer_segmentation():
     if st.button("🔄 Phân tích Khách hàng", key="seg_analyze"):
         with st.spinner("Đang phân tích..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=KMEANS_CONFIG['sample_size'])
+            trans_df = data_layer.load_transaction_data()
             
             if len(trans_df) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -224,7 +224,7 @@ def show_campaign_response_prediction():
     if st.button("🔮 Dự đoán Phản hồi", key="campaign_predict"):
         with st.spinner("Đang dự đoán..."):
             data_layer = get_data_layer()
-            merged = data_layer.get_merged_dataset(sample_size=10000)
+            merged = data_layer.get_merged_dataset()
             
             if len(merged) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -307,7 +307,7 @@ def show_product_recommendation():
     if st.button("🔍 Tìm Luật Kết hợp", key="recom_find"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=APRIORI_CONFIG['sample_size'])
+            trans_df = data_layer.load_transaction_data()
             product_df = data_layer.load_product_data()
             
             if len(trans_df) == 0 or len(product_df) == 0:

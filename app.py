@@ -19,15 +19,21 @@ from src.config_manager import show_config_editor
 
 def show_settings():
     """Hiển thị panel config editor (Dataset cài đặt đã có trong Config Editor)."""
+    from src.config_manager import ConfigManager
+    
     st.sidebar.markdown("---")
     
-    # Khởi tạo session_state từ config.py (sử dụng config editor để chỉnh)
+    # ✅ QUAN TRỌNG: Load config từ overrides (nếu có) hoặc từ config.py
+    current_config = ConfigManager.get_current_config()
+    
+    # Khởi tạo/cập nhật session_state từ config (bao gồm overrides)
     if 'dataset_mode' not in st.session_state:
-        st.session_state.dataset_mode = DATASET_MODE
+        st.session_state.dataset_mode = current_config["DATASET"]["mode"]
     if 'sample_size' not in st.session_state:
-        st.session_state.sample_size = DATASET_SAMPLE_SIZE
+        st.session_state.sample_size = current_config["DATASET"]["sample_size"]
     if 'config_popup' not in st.session_state:
         st.session_state.config_popup = False
+    
     show_config_editor()
     st.sidebar.markdown("---")
 

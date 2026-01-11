@@ -53,7 +53,7 @@ def show_apriori_lab():
     if st.button("▶️ Chạy Apriori", key="apriori_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=APRIORI_CONFIG['sample_size'])
+            trans_df = data_layer.load_transaction_data()
             
             if len(trans_df) == 0:
                 st.error("Không thể tải dữ liệu giao dịch.")
@@ -138,7 +138,7 @@ def show_rough_set_lab():
     if st.button("▶️ Chạy Rough Set", key="rough_set_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            merged = data_layer.get_merged_dataset(sample_size=10000)
+            merged = data_layer.get_merged_dataset()
             
             if len(merged) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -207,7 +207,7 @@ def show_naive_bayes_lab():
     if st.button("▶️ Chạy Naïve Bayes", key="naive_bayes_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            merged = data_layer.get_merged_dataset(sample_size=10000)
+            merged = data_layer.get_merged_dataset()
             
             if len(merged) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -291,7 +291,7 @@ def show_decision_tree_lab():
     if st.button("▶️ Chạy Decision Tree", key="dt_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            merged = data_layer.get_merged_dataset(sample_size=DECISION_TREE_CONFIG['sample_size'])
+            merged = data_layer.get_merged_dataset()
             
             if len(merged) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -366,7 +366,7 @@ def show_bayesian_network_lab():
     if st.button("▶️ Chạy Bayesian Network", key="bn_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            merged = data_layer.get_merged_dataset(sample_size=10000)
+            merged = data_layer.get_merged_dataset()
             
             if len(merged) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -544,7 +544,7 @@ def show_kmeans_lab():
     if st.button("▶️ Chạy k-Means", key="kmeans_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=KMEANS_CONFIG['sample_size'])
+            trans_df = data_layer.load_transaction_data()
             
             if len(trans_df) == 0:
                 st.error("Không thể tải dữ liệu giao dịch.")
