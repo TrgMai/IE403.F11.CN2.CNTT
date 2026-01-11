@@ -1,0 +1,35 @@
+[theme]
+# Primary color - màu chính
+primaryColor = "#1f77b4"
+
+# Background color - màu nền (Light mode)
+backgroundColor = "#ffffff"
+
+# Secondary background color - màu nền phụ (Light mode)
+secondaryBackgroundColor = "#f0f2f6"
+
+# Text color - màu text
+textColor = "#262730"
+
+# Font
+font = "sans serif"
+
+# Mode: light hoặc dark
+base = "light"
+
+[client]
+showErrorDetails = true
+toolbarMode = "viewer"
+
+[logger]
+level = "info"
+
+[server]
+maxUploadSize = 200
+enableXsrfProtection = true
+
+[runner]
+magicEnabled = true
+
+[client.showstreamrunnerWarning]
+showWarning = false
