@@ -7,6 +7,7 @@ import numpy as np
 import streamlit as st
 from typing import Dict, List, Tuple
 from sklearn.preprocessing import LabelEncoder
+from src.config import BAYESIAN_NETWORK_CONFIG
 
 class BayesianNetworkDAG:
     """

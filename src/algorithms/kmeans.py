@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score, davies_bouldin_score
 from typing import Dict, Tuple
 from datetime import datetime, timedelta
+from src.config import KMEANS_CONFIG
 
 class KMeansClustering:
     """

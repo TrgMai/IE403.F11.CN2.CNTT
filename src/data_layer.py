@@ -10,7 +10,7 @@ import pandas as pd
 import streamlit as st
 from typing import Optional
 from pathlib import Path
-from src.config import DATA_FILES
+from src.config import DATA_FILES, CACHE_ENABLED, CACHE_TTL
 
 
 class KaggleDownloader:
@@ -87,31 +87,31 @@ class DataLoader:
 
 
 class DataCache:
-    """Lớp cache dữ liệu dùng Streamlit."""
+    """Lớp cache dữ liệu dùng Streamlit (sử dụng CACHE_TTL từ config)."""
     
     @staticmethod
-    @st.cache_data(ttl=3600)
+    @st.cache_data(ttl=CACHE_TTL if CACHE_ENABLED else None)
     def cache_transaction_data(sample_size: Optional[int] = None) -> pd.DataFrame:
         """Cache dữ liệu giao dịch."""
         loader = DataLoader()
         return loader.load_csv(DATA_FILES['transaction'], nrows=sample_size)
     
     @staticmethod
-    @st.cache_data(ttl=3600)
+    @st.cache_data(ttl=CACHE_TTL if CACHE_ENABLED else None)
     def cache_product_data() -> pd.DataFrame:
         """Cache dữ liệu sản phẩm."""
         loader = DataLoader()
         return loader.load_csv(DATA_FILES['product'])
     
     @staticmethod
-    @st.cache_data(ttl=3600)
+    @st.cache_data(ttl=CACHE_TTL if CACHE_ENABLED else None)
     def cache_demographic_data() -> pd.DataFrame:
         """Cache dữ liệu nhân khẩu học."""
         loader = DataLoader()
         return loader.load_csv(DATA_FILES['demographic'])
     
     @staticmethod
-    @st.cache_data(ttl=3600)
+    @st.cache_data(ttl=CACHE_TTL if CACHE_ENABLED else None)
     def cache_campaign_data() -> pd.DataFrame:
         """Cache dữ liệu chiến dịch."""
         loader = DataLoader()

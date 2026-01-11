@@ -14,6 +14,10 @@ from src.algorithms.naive_bayes import NaiveBayesClassifier
 from src.algorithms.decision_tree import DecisionTreeCART, DecisionTreeC45, DecisionTreeID3
 from src.algorithms.bayesian_network import BayesianNetworkDAG
 from src.algorithms.kmeans import KMeansClustering
+from src.config import (
+    APRIORI_CONFIG, KMEANS_CONFIG, DECISION_TREE_CONFIG, 
+    NAIVE_BAYES_CONFIG, ROUGH_SET_CONFIG, BAYESIAN_NETWORK_CONFIG
+)
 
 
 def show_apriori_lab():
@@ -39,15 +43,17 @@ def show_apriori_lab():
     col1, col2 = st.columns(2)
     with col1:
         min_support = st.slider(
-            "Min Support (%)", 0.1, 10.0, 2.0, 0.1) / 100
+            "Min Support (%)", 0.1, 10.0, 
+            APRIORI_CONFIG['min_support'] * 100, 0.1) / 100
     with col2:
         min_confidence = st.slider(
-            "Min Confidence (%)", 10, 100, 50, 5) / 100
+            "Min Confidence (%)", 10, 100, 
+            int(APRIORI_CONFIG['min_confidence'] * 100), 5) / 100
     
     if st.button("▶️ Chạy Apriori", key="apriori_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=30000)
+            trans_df = data_layer.load_transaction_data(sample_size=APRIORI_CONFIG['sample_size'])
             
             if len(trans_df) == 0:
                 st.error("Không thể tải dữ liệu giao dịch.")
@@ -277,13 +283,15 @@ def show_decision_tree_lab():
             Khác biệt: ID3 không có pruning, dễ Overfitting trên dữ liệu nhỏ.
             """)
     
-    max_depth = st.slider("Độ sâu tối đa (max_depth)", 3, 15, 5)
-    min_samples = st.slider("Min samples để tách nút", 2, 20, 10)
+    max_depth = st.slider("Độ sâu tối đa (max_depth)", 3, 15, 
+                         DECISION_TREE_CONFIG['max_depth'])
+    min_samples = st.slider("Min samples để tách nút", 2, 20, 
+                           DECISION_TREE_CONFIG['min_samples_split'])
     
     if st.button("▶️ Chạy Decision Tree", key="dt_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            merged = data_layer.get_merged_dataset(sample_size=10000)
+            merged = data_layer.get_merged_dataset(sample_size=DECISION_TREE_CONFIG['sample_size'])
             
             if len(merged) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -531,12 +539,12 @@ def show_kmeans_lab():
         - **Davies-Bouldin Index:** < 1 = tốt
         """)
     
-    n_clusters = st.slider("Số cụm (k)", 2, 10, 3)
+    n_clusters = st.slider("Số cụm (k)", 2, 10, KMEANS_CONFIG['n_clusters'])
     
     if st.button("▶️ Chạy k-Means", key="kmeans_run"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=30000)
+            trans_df = data_layer.load_transaction_data(sample_size=KMEANS_CONFIG['sample_size'])
             
             if len(trans_df) == 0:
                 st.error("Không thể tải dữ liệu giao dịch.")

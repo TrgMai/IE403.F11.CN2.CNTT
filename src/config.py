@@ -16,9 +16,9 @@ DATASET_SAMPLE_SIZE = 30000  # Số records khi mode = "custom"
 
 # APRIORI - Association Rule Mining
 APRIORI_CONFIG = {
-    "min_support": 0.001,      # 0.1% - Itemset phải xuất hiện ít nhất 0.1% transactions
+    "min_support": 0.005,      # 0.5% - Tăng từ 0.1% để giảm memory
     "min_confidence": 0.3,     # 30% - Rule phải có độ tin cậy ít nhất 30%
-    "sample_size": 30000       # Số transactions dùng cho training
+    "sample_size": 10000       # Giảm từ 30000 để tiết kiệm memory
 }
 
 # K-MEANS - Customer Segmentation (RFM)

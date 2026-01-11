@@ -7,6 +7,7 @@ import numpy as np
 import streamlit as st
 from typing import List, Dict, Set, Tuple
 from sklearn.preprocessing import LabelEncoder
+from src.config import ROUGH_SET_CONFIG
 
 class RoughSetReduct:
     """

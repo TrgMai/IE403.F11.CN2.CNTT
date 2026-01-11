@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn.preprocessing import LabelEncoder
 from typing import Dict, Tuple
+from src.config import DECISION_TREE_CONFIG
 
 class DecisionTreeCART:
     """

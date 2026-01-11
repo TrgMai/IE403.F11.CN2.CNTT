@@ -11,6 +11,7 @@ from src.data_preprocessing import DataPreprocessor
 from src.algorithms.kmeans import KMeansClustering
 from src.algorithms.decision_tree import DecisionTreeCART
 from src.algorithms.apriori import AprioriAlgorithm
+from src.config import APRIORI_CONFIG, KMEANS_CONFIG, DECISION_TREE_CONFIG
 
 
 def show_data_analysis():
@@ -127,12 +128,12 @@ def show_customer_segmentation():
     st.header("👥 Phân khúc Khách hàng")
     st.write("Sử dụng k-Means Clustering để chia khách hàng thành các nhóm có tính chất tương tự")
     
-    n_clusters = st.slider("Số nhóm khách hàng", 2, 5, 3)
+    n_clusters = st.slider("Số nhóm khách hàng", 2, 5, KMEANS_CONFIG['n_clusters'])
     
     if st.button("🔄 Phân tích Khách hàng", key="seg_analyze"):
         with st.spinner("Đang phân tích..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=30000)
+            trans_df = data_layer.load_transaction_data(sample_size=KMEANS_CONFIG['sample_size'])
             
             if len(trans_df) == 0:
                 st.error("Không thể tải dữ liệu.")
@@ -233,7 +234,8 @@ def show_campaign_response_prediction():
             merged['CAMPAIGN_RESPONSE'] = (merged['SALES_VALUE'] > 
                                           merged['SALES_VALUE'].median()).astype(int)
             
-            model = DecisionTreeCART(max_depth=5, min_samples_split=10)
+            model = DecisionTreeCART(max_depth=DECISION_TREE_CONFIG['max_depth'], 
+                                    min_samples_split=DECISION_TREE_CONFIG['min_samples_split'])
             result = model.train(merged, target_column='CAMPAIGN_RESPONSE')
             
             if 'error' in result:
@@ -305,7 +307,7 @@ def show_product_recommendation():
     if st.button("🔍 Tìm Luật Kết hợp", key="recom_find"):
         with st.spinner("Đang xử lý..."):
             data_layer = get_data_layer()
-            trans_df = data_layer.load_transaction_data(sample_size=30000)
+            trans_df = data_layer.load_transaction_data(sample_size=APRIORI_CONFIG['sample_size'])
             product_df = data_layer.load_product_data()
             
             if len(trans_df) == 0 or len(product_df) == 0:
@@ -313,8 +315,8 @@ def show_product_recommendation():
                 return
             
             apriori = AprioriAlgorithm()
-            itemsets, rules = apriori.run(trans_df, min_support=0.002, 
-                                         min_confidence=0.3)
+            itemsets, rules = apriori.run(trans_df, min_support=APRIORI_CONFIG['min_support'], 
+                                         min_confidence=APRIORI_CONFIG['min_confidence'])
             
             if len(rules) == 0:
                 st.warning("Không tìm thấy Association Rules.")

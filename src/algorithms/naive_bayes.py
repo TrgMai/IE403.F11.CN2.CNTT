@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
 from sklearn.preprocessing import LabelEncoder
 from typing import Tuple, Dict
+from src.config import NAIVE_BAYES_CONFIG
 
 class NaiveBayesClassifier:
     """
