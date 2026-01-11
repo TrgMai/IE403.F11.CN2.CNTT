@@ -25,7 +25,7 @@ Truy cập: `http://localhost:8501`
 
 ---
 
-## 📁 Cấu trúc Dự án
+## Cấu trúc Dự án
 
 ```
 IE403.F11.CN2.CNTT/
