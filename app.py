@@ -137,20 +137,6 @@ def main():
     )
     
     st.sidebar.markdown("---")
-    st.sidebar.markdown("""
-    ### Thông tin
-    
-    **Phiên bản:** 1.0.0
-    
-    **Dữ liệu:** Dunnhumby - Complete Journey
-    
-    **Stack:**
-    - Python 3.10
-    - Streamlit
-    - scikit-learn, mlxtend
-    
-    **Tác giả:** Data Science Team
-    """)
     
     # Chuyển đổi giữa hai chế độ
     if mode == "Phòng Thí Nghiệm":
