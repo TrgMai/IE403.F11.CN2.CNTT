@@ -102,6 +102,16 @@ class ConfigManager:
 def show_config_editor():
     """Hiển thị popup chỉnh sửa config với giao diện cải tiến."""
     
+    st.markdown("""
+        <style>
+        /* Tìm tất cả các nút bấm trong Sidebar và ép hiển thị 1 dòng */
+        [data-testid="stSidebar"] button {
+            white-space: nowrap !important; /* Không bao giờ xuống dòng */
+            min-width: fit-content !important; /* Tự giãn chiều ngang cho đủ chữ */
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     # --- 1. SIDEBAR: CONTROL PANEL ---
     with st.sidebar.container():
         st.markdown("### 🛠️ Control Panel")
