@@ -104,10 +104,8 @@ def show_config_editor():
     
     st.markdown("""
         <style>
-        /* Tìm tất cả các nút bấm trong Sidebar và ép hiển thị 1 dòng */
-        [data-testid="stSidebar"] button {
-            white-space: nowrap !important; /* Không bao giờ xuống dòng */
-            min-width: fit-content !important; /* Tự giãn chiều ngang cho đủ chữ */
+        div[data-testid="stSidebar"] button {
+            white-space: nowrap !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -117,21 +115,16 @@ def show_config_editor():
         st.markdown("### 🛠️ Control Panel")
         st.caption("Quản lý tham số hệ thống")
         
-        # Chia 2 cột đều nhau, khoảng cách nhỏ
-        col1, col2 = st.sidebar.columns([1, 1], gap="small")
-        
-        with col1:
-            # Nút Cấu hình: Màu nổi (Primary)
-            if st.button("⚙️ Thiết lập", key="open_config", type="primary", use_container_width=True):
-                st.session_state.config_popup = True
-        
-        with col2:
-            # Nút Reset: Màu thường (Secondary)
-            if st.button("🔄 Mặc định", key="reset_config", use_container_width=True, help="Khôi phục cài đặt gốc"):
-                if ConfigManager.reset_overrides():
-                    st.toast("✅ Đã khôi phục cấu hình mặc định!", icon="🎉")
-                    st.rerun()
-
+        if st.button("⚙️ Thiết lập cấu hình", key="open_config", type="primary", use_container_width=True):
+            st.session_state.config_popup = True
+            
+        # 2. Nút Reset (Secondary - Full width) - Thêm khoảng cách nhỏ ở trên
+        st.write("") # Tạo khoảng trống tí xíu
+        if st.button("🔄 Khôi phục mặc định", key="reset_config", use_container_width=True):
+            if ConfigManager.reset_overrides():
+                st.toast("✅ Đã khôi phục cấu hình!", icon="🎉")
+                st.rerun()
+                
     # --- 2. POPUP (MODAL) ---
     if st.session_state.get("config_popup", False):
         with st.container():
